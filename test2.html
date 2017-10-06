@@ -1,0 +1,89 @@
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Dancing+Script|Lobster|Pacifico|Satisfy');
+  body{
+    text-align: center;
+    background-image: url("https://i.pinimg.com/236x/26/18/4e/26184e0d1c310b2d3e2a1746ad6d8124--green-design-burke.jpg");
+   font-family: 'Dancing Script', cursive;  
+}
+  h1{
+    padding:40px;
+    font-size: 60px;
+  }
+#image{
+  width: 60%;
+  padding: 30px;
+}
+#Tony{
+  width: 300px;
+}
+
+.main{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+#body{
+  font-size: 30px;
+}  
+</style>
+<title>Chef's Finder</title>
+<script
+  src="http://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+</script>
+<script>
+  $(document).ready(function() {
+    $("#foodButton").click(function(e){
+      var value = $("#foodField").val();
+      e.preventDefault();    
+      console.log(value);     
+     
+      var myurl= "http://food2fork.com/api/search?key=72b9bb6b9908c4a44c5fc29f1f7351a4&q=";
+      myurl += value;
+    //  myurl += ".json";
+      console.log(myurl);
+
+      $.ajax({
+       url : myurl,
+       dataType : "JSON",
+       success : function(parsed_json) {
+         console.log(parsed_json);
+         
+         //var myList = null;
+         for(var i = 0; i < parsed_json.recipes.length; i++){
+         if(i == 0)
+{
+  var myList = '<a href = "' + parsed_json.recipes[i].source_url + '" target="_blank">';   
+        myList += '<div id = "recipes"><p>'+ (i+1) + ". " + parsed_json.recipes[i].title + '</p>';
+           myList += '<img id = "image" src="' + parsed_json.recipes[i].image_url + '">';
+           myList += '</div>';
+}
+else       
+{myList += '<a href = "' + parsed_json.recipes[i].source_url + '" target="_blank">';   
+	myList += '<div id = "recipes"><p>'+ (i+1) + ". " + parsed_json.recipes[i].title + '</p>';
+           myList += '<img id = "image" src="' + parsed_json.recipes[i].image_url + '">';
+           myList += '</div>';
+         } 
+} 
+         $("#foodResult").html(myList);
+       }
+      });
+    });
+  });    
+</script>
+</head>
+<body>
+<h1><b>Recipe Finder</b></h1>
+<img id="Tony" src = "https://i.stack.imgur.com/QTHaO.png">
+<br><br><br>
+<div id = "body">
+  <form>
+    What can Tony help you make? <input type="text" id="foodField" value=""><br><br>
+    <input id="foodButton" type="submit" value="Submit"> 
+ </form>
+  <div class = "main"  id="foodResult"></div>
+</div>
+</body>
+</html>
